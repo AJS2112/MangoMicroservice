@@ -53,5 +53,80 @@ namespace Mango.Services.CouponAPI.Controllers
             }
             return _response;
         }
+
+        [HttpGet]
+        [Route("GetByCode/{code}")]
+        public ResponseDto GetByCode(string code)
+        {
+            try
+            {
+                var cupom = _db.Coupons.First(c => c.CouponCode.ToLower() == code.ToLower());
+                if (cupom == null) _response.IsSuccess = false;
+                _response.Result = _mapper.Map<CouponDto>(cupom);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [HttpPost]
+        public async Task<ResponseDto> Post([FromBody] CouponDto couponDto)
+        {
+            try
+            {
+                Coupon coupon = _mapper.Map<Coupon>(couponDto);
+                _db.Add(coupon);
+                await _db.SaveChangesAsync();
+
+                _response.Result = _mapper.Map<CouponDto>(coupon);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [HttpPut]
+        public async Task<ResponseDto> Put([FromBody] CouponDto couponDto)
+        {
+            try
+            {
+                Coupon coupon = _mapper.Map<Coupon>(couponDto);
+                _db.Update(coupon);
+                await _db.SaveChangesAsync();
+
+                _response.Result = _mapper.Map<CouponDto>(coupon);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
+
+        [HttpDelete]
+        public async Task<ResponseDto> Delete(int id)
+        {
+            try
+            {
+                Coupon coupon = _db.Coupons.First(c => c.CouponId == id);
+                _db.Coupons.Remove(coupon);
+                await _db.SaveChangesAsync();
+
+                _response.Result = _mapper.Map<CouponDto>(coupon);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message;
+            }
+            return _response;
+        }
     }
 }
