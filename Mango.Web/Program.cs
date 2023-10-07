@@ -10,11 +10,11 @@ namespace Mango.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            SD.CouponApiBase = builder.Configuration["ServiceUrls:CouponApi"];
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            SD.CouponApiBase = builder.Configuration["ServiceUrls:CouponApi"];
 
             builder.Services.AddHttpContextAccessor();
             builder.Services.AddHttpClient();
