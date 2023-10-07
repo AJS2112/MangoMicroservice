@@ -1,4 +1,7 @@
 
+using Mango.Services.CouponAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Mango.Services.CouponAPI
 {
     public class Program
@@ -8,7 +11,10 @@ namespace Mango.Services.CouponAPI
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
+            builder.Services.AddDbContext<AppDbContext>(option =>
+            {
+                option.UseInMemoryDatabase("MangoCoupon");
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -31,6 +37,16 @@ namespace Mango.Services.CouponAPI
             app.MapControllers();
 
             app.Run();
+        }
+        
+        private static void SeedDatabase(WebApplication app)
+        {
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var couponContext = services.GetRequiredService<AppDbContext>();
+                AppDbContextSeed.SeedAsync(couponContext);
+            }
         }
     }
 }
