@@ -35,7 +35,7 @@ namespace Mango.Services.CouponAPI
 
 
             app.MapControllers();
-
+            SeedDatabase(app);
             app.Run();
         }
         
